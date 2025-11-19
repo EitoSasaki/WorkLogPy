@@ -13,6 +13,19 @@ import pathlib
 from datetime import datetime
 
 def run_auto_fill_command(date, excel_file):
+    # 入力値の検証
+    if not date or not excel_file:
+        messagebox.showwarning("入力エラー", "対象年月とファイルパスを入力してください。")
+        return
+    
+    if not date.isdigit() or len(date) != 6:
+        messagebox.showwarning("入力エラー", "対象年月は YYYYMM 形式で入力してください。")
+        return
+    
+    if not pathlib.Path(excel_file).exists():
+        messagebox.showwarning("ファイルエラー", "指定されたファイルが存在しません。")
+        return
+
     # 実行するファイルはこのスクリプトと同じディレクトリにある auto_fill.py を想定
     script_path = pathlib.Path(__file__).resolve().parent / 'auto_fill.py'
     command = [sys.executable, str(script_path), '--date', date, '--file', excel_file]
